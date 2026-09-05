@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.services.product_service import get_products, get_product_by_id, add_product, Product
-from app.schemas.products import ProductResponse, ProductCreate
+from app.services.product_service import get_products, get_product_by_id, add_product, Product, update_product, delete_product
+from app.schemas.products import ProductResponse, ProductCreate, ProductUpdate
 
 
 router = APIRouter(
@@ -40,3 +40,28 @@ def create_product(product: ProductCreate):
         )
 
     return created_product
+
+@router.put("/{id}", response_model=ProductResponse)
+def edit_product(id: int, product: ProductUpdate):
+    updated_product = update_product(id, product.stock)
+
+    if updated_product is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    return updated_product
+
+
+@router.delete("/{id}")
+def remove_product(id: int):
+    deleted = delete_product(id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    return {"message": "Product deleted successfully"}
