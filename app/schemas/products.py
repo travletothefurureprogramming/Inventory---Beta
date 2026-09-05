@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class ProductCreate(BaseModel):
     name: str
@@ -23,23 +24,17 @@ class ProductUpdate(BaseModel):
 
     stock: int
 
+
 class ProductResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
-
     name: str
-
     sku: str
-
     barcode: str | None = None
-
     category: str | None = None
-
     purchase_price: float
-
     selling_price: float
-
     vat: float
-
     stock: int
-
     minimum_stock: int
