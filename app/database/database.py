@@ -60,3 +60,20 @@ def update_product(product_id: int, stock: int):
     session.close()
 
     return product
+
+
+def delete_product(product_id: int):
+    session = SessionLocal()
+
+    product = session.get(Product, product_id)
+
+    if product is None:
+        session.close()
+        return False
+
+    session.delete(product)
+    session.commit()
+
+    session.close()
+
+    return True
