@@ -24,3 +24,62 @@ def add_product(product: Product):
     session.close()
 
     return product
+
+def get_product_by_id(product_id: int):
+    session = SessionLocal()
+
+    product = session.get(Product, product_id)
+
+    session.close()
+
+    return product
+
+
+def get_products():
+    session = SessionLocal()
+
+    result = session.execute(
+        select(Product)
+    )
+
+    products = result.scalars().all()
+
+    session.close()
+
+    return products
+
+
+def update_product(product_id: int, stock: int):
+    session = SessionLocal()
+
+    product = session.get(Product, product_id)
+
+    if product is None:
+        session.close()
+        return None
+
+    product.stock = stock
+
+    session.commit()
+    session.refresh(product)
+
+    session.close()
+
+    return product
+
+
+def delete_product(product_id: int):
+    session = SessionLocal()
+
+    product = session.get(Product, product_id)
+
+    if product is None:
+        session.close()
+        return False
+
+    session.delete(product)
+    session.commit()
+
+    session.close()
+
+    return True
